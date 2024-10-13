@@ -31,7 +31,8 @@ class SchemaManager:
             """
             CREATE TABLE IF NOT EXISTS room_type(
                 roomTypeID SERIAL PRIMARY KEY,
-                roomTypeName VARCHAR(20) NOT NULL
+                roomTypeName VARCHAR(20) NOT NULL,
+                roomTypePrice DOUBLE PRECISION  -- Removed the trailing comma
             );
             """,
             # Room Status Table
@@ -62,7 +63,6 @@ class SchemaManager:
                 roomStatusID INTEGER NOT NULL,
                 roomNo VARCHAR(10) NOT NULL,
                 roomFloorNo VARCHAR(10) NOT NULL,
-                roomPrice DOUBLE PRECISION,
                 roomSize VARCHAR(10),
                 FOREIGN KEY (apartmentID) REFERENCES apartment(apartmentID)
                     ON DELETE CASCADE ON UPDATE CASCADE,
@@ -79,7 +79,7 @@ class SchemaManager:
                 userRoleID INTEGER NOT NULL,
                 userName VARCHAR(20) NOT NULL,
                 userEmail VARCHAR(128) NOT NULL,
-                userPassword VARCHAR(32) NOT NULL,
+                userPassword VARCHAR(128) NOT NULL,
                 FOREIGN KEY (userRoleID) REFERENCES user_role(userRoleID)
                     ON DELETE RESTRICT ON UPDATE CASCADE
             );
@@ -106,7 +106,7 @@ class SchemaManager:
         try:
             for query in queries:
                 self.cursor.execute(query)
-            logger.info("Tables Created Successfully.")
+            # logger.info("Tables Created Successfully.")
         except DatabaseError as e:
             logger.error(f"Error creating tables: {e}")
             raise Exception(f"Error creating tables: {e}")

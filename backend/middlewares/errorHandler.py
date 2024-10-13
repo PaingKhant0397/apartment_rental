@@ -20,13 +20,18 @@ class ErrorHandler:
                     handler.send_response(400)
                     handler.send_header('Content-Type', 'application/json')
                     handler.end_headers()
-                    response = {'error': str(e)}
+                    response = {
+                        'status': 'error',
+                        'message': str(e)
+                    }
                     handler.wfile.write(json.damps(response).encode())
                 else:
                     handler.send_response(500)
                     handler.send_header('Content-type', 'application/json')
                     handler.end_headers()
-                    response = {'error': 'Internal server error',
-                                'details': str(e)}
+                    response = {
+                        'status': 'error',
+                        'message': 'Internal server error ' + str(e)
+                    }
                     handler.wfile.write(json.dumps(response).encode())
         return wrapper

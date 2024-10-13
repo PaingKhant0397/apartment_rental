@@ -7,6 +7,11 @@ from middlewares import JWTAuthentication, RequestValidation
 
 class UserController(BaseHTTPRequestHandler):
 
+    required_fields_map = {
+        ('/api/users', 'POST'): ['userRoleID', 'userName', 'userEmail', 'userPassword'],
+        ('/api/users', 'PUT'): ['userID', 'userRoleID', 'userName', 'userEmail', 'userPassword'],
+    }
+
     @JWTAuthentication.require_jwt
     def do_GET(self):
         user = User()
@@ -19,7 +24,7 @@ class UserController(BaseHTTPRequestHandler):
         else:
             handle_unknown_endpoint(self)
 
-    @RequestValidation.validate_required_fields(['userRoleID', 'userName', 'userEmail', 'userPassword'])
+    @RequestValidation.validate_required_fields(required_fields_map=required_fields_map)
     def do_POST(self):
         if self.path == '/api/users':
             try:

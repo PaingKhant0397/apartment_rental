@@ -6,11 +6,14 @@ import utils
 
 class RequestValidation:
 
-    def validate_required_fields(required_fields):
+    def validate_required_fields(required_fields_map):
 
         def decorator(func):
             @wraps(func)
             def wrapper(handler, *args, **kwargs):
+                path = handler.path
+                method = handler.command
+                required_fields = required_fields_map.get((path, method), [])
 
                 request_data = utils.get_request_data(handler)
 

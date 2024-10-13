@@ -1,7 +1,7 @@
 import json
 
 from http.server import BaseHTTPRequestHandler
-from controllers import User_RoleController, UserController
+from controllers import User_RoleController, UserController, Auth_Controller
 from middlewares import ErrorHandler, RequestLogger
 
 
@@ -29,5 +29,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             User_RoleController.do_POST(self)
         elif self.path.startswith('/api/users'):
             UserController.do_POST(self)
+        elif self.path.startswith('/api/auth'):
+            Auth_Controller.do_POST(self)
         else:
             handle_unknown_endpoint(self)

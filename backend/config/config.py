@@ -11,6 +11,22 @@ DB_PASSWORD = os.getenv('DB_PASSWORD')
 DB_HOST = os.getenv('DB_HOST')
 DB_PORT = os.getenv('DB_PORT')
 
+CONNECTION_PARAMS = {
+    'dbname': DB_NAME,
+    'user': DB_USER,
+    'password': DB_PASSWORD,
+    'host': DB_HOST,
+    'port': DB_PORT
+}
+
+TEST_CONNECTION_PARAMS = {
+    'dbname': 'apartmentrentaldb_test',
+    'user': DB_USER,
+    'password': DB_PASSWORD,
+    'host': DB_HOST,
+    'port': DB_PORT
+}
+
 """JWT SECRET KEY 
     """
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')

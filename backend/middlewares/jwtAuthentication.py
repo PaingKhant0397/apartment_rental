@@ -15,7 +15,8 @@ class JWTAuthentication:
 
                 if not auth_header or auth_header.startswith("Bearer "):
                     response = {
-                        "error": "Authorization header missing or invalid"
+                        "status": "error",
+                        "message": "Authorization header missing or invalid"
                     }
                     utils.send_json_response(
                         handler, response, HTTPStatus.UNAUTHORIZED)
@@ -27,7 +28,11 @@ class JWTAuthentication:
                 return func(handler, *args, **kwargs)
 
             except Exception as e:
-                utils.send_json_response(
-                    handler, {"error": str(e)}, HTTPStatus.UNAUTHORIZED)
+                response = {
+                    "status": "error",
+                    "message": str(e)
+                }
+
+                utils.send_json_response(handler, response)
 
         return wrapper
