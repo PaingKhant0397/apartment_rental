@@ -1,3 +1,5 @@
+/* eslint-disable import/no-nodejs-modules */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-extraneous-dependencies */
 
 import js from '@eslint/js'
@@ -20,22 +22,21 @@ const compat = new FlatCompat({
 })
 
 export default [
-  // importPlugin.flatConfigs.recommended,
-  // js.configs.recommended,
-
   { ignores: ['dist'] },
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
       parserOptions: {
         ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },
         sourceType: 'module',
       },
     },
-    env: { browser: true, node: true },
     settings: { react: { version: 'detect' } }, // auto-detect React version
     plugins: {
       react,
@@ -48,7 +49,6 @@ export default [
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       'react/jsx-no-target-blank': 'off',
-      // 'react/react-in-jsx-scope': 'off', // disable this rule
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
@@ -76,6 +76,7 @@ export default [
       'import/no-dynamic-require': 'warn',
       'import/no-nodejs-modules': 'warn',
       'import/no-extraneous-dependencies': 'off',
+      'react/prop-types': 'off',
     },
   },
 ]
