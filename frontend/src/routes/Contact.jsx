@@ -1,5 +1,5 @@
 // src/pages/Contact.js
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Container,
   Typography,
@@ -14,8 +14,53 @@ import {
 import PhoneIcon from '@mui/icons-material/Phone'
 import EmailIcon from '@mui/icons-material/Email'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
+import useEmail from '../hooks/useEmail' // Import the useEmail hook
 
 function Contact() {
+  const { sendEmail, loading, error } = useEmail() // Initialize the useEmail hook
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  })
+
+  // Handle form data changes
+  const handleChange = e => {
+    const { name, value } = e.target
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value,
+    }))
+  }
+
+  // Handle form submission
+  const handleSubmit = async e => {
+    e.preventDefault()
+
+    const emailData = {
+      subject: formData.subject,
+      body: '',
+      html_body: `
+      <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+          <div style="max-width: 600px; margin: auto; background: white; border-radius: 5px; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <h1 style="color: #333;">${formData.subject}</h1>
+            <p style="font-size: 16px; color: #555;">${formData.message}</p>
+            <p style="font-size: 14px; color: #888;">Sent from: ${formData.email}</p>
+            <p style="font-size: 14px; color: #888;">Thank you for contacting us!</p>
+          </div>
+        </body>
+      </html>
+    `,
+      to_emails: ['paingkhant0397@gmail.com', formData.email],
+      from_email: formData.email,
+    }
+
+    await sendEmail(emailData) // Send the email using the useEmail hook
+    setFormData({ name: '', email: '', subject: '', message: '' }) // Reset form data
+  }
+
   return (
     <Container maxWidth='md' sx={{ py: 5 }}>
       {/* Page Header */}
@@ -42,31 +87,65 @@ function Contact() {
           Send Us a Message
         </Typography>
         <Divider sx={{ mb: 3 }} />
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Your Name' variant='outlined' />
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label='Your Name'
+                variant='outlined'
+                name='name'
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label='Your Email'
+                variant='outlined'
+                name='email'
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label='Subject'
+                variant='outlined'
+                name='subject'
+                value={formData.subject}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label='Message'
+                variant='outlined'
+                multiline
+                rows={4}
+                name='message'
+                value={formData.message}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} textAlign='center'>
+              <Button
+                variant='contained'
+                color='primary'
+                size='large'
+                type='submit'
+                disabled={loading}
+              >
+                {loading ? 'Sending...' : 'Submit'}
+              </Button>
+              {error && <Typography color='error'>{error}</Typography>}{' '}
+              {/* Display error message */}
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Your Email' variant='outlined' />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField fullWidth label='Subject' variant='outlined' />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label='Message'
-              variant='outlined'
-              multiline
-              rows={4}
-            />
-          </Grid>
-          <Grid item xs={12} textAlign='center'>
-            <Button variant='contained' color='primary' size='large'>
-              Submit
-            </Button>
-          </Grid>
-        </Grid>
+        </form>
       </Box>
 
       {/* Contact Information Section */}

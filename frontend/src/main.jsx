@@ -13,6 +13,7 @@ import Register from './routes/Register'
 import Login from './routes/Login'
 import About from './routes/About'
 import Contact from './routes/Contact'
+import Bookings from './routes/Bookings'
 // Admin routes
 import AdminIndex from './routes/admin/AdminIndex'
 import AdminLogin from './routes/admin/AdminLogin'
@@ -28,11 +29,16 @@ import AvailableRoomTypeUpdate from './routes/admin/dashboard/apartment/availabl
 import RoomList from './routes/admin/dashboard/apartment/room/RoomList'
 import RoomRegister from './routes/admin/dashboard/apartment/room/RoomRegister'
 import RoomUpdate from './routes/admin/dashboard/apartment/room/RoomUpdate'
-
+import RentalRegister from './routes/admin/dashboard/rental/RentalRegister'
+import RentalList from './routes/admin/dashboard/rental/RentalList'
 // New Client routes
-import ApartmentCatalogPage from './routes/ApartmentCatalogPage' // New Apartment Catalog Component
+import ApartmentCatalogPage from './routes/ApartmentCatalogPage'
 import ApartmentDetailClient from './routes/ApartmentDetailClient'
 import theme from '../theme'
+import BookingList from './routes/admin/dashboard/booking/BookingList'
+import InvoiceList from './routes/admin/dashboard/rental/invoice/InvoiceList'
+import InvoiceRegister from './routes/admin/dashboard/rental/invoice/InvoiceRegister'
+import InvoiceUpdate from './routes/admin/dashboard/rental/invoice/InvoiceUpdate'
 
 const router = createBrowserRouter([
   {
@@ -66,12 +72,16 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: '/apartments', // New route for Apartment Catalog
+        path: '/apartments',
         element: <ApartmentCatalogPage />,
       },
       {
-        path: '/apartments/:id', // New route for Apartment Detail
+        path: '/apartments/:id',
         element: <ApartmentDetailClient />,
+      },
+      {
+        path: '/bookings',
+        element: <Bookings />,
       },
     ],
   },
@@ -95,7 +105,7 @@ const router = createBrowserRouter([
       {
         index: true,
         path: '/admin/dashboard',
-        element: <AdminHome />,
+        element: <ApartmentList />,
       },
       // ------Apartments-----------//
       {
@@ -139,6 +149,33 @@ const router = createBrowserRouter([
       {
         path: '/admin/dashboard/apartments/:id/rooms/:room_id/update',
         element: <RoomUpdate />,
+      },
+      // ------ Bookings -----------//
+      {
+        path: '/admin/dashboard/bookings',
+        element: <BookingList />,
+      },
+      // ------ Rentals -----------//
+      {
+        path: '/admin/dashboard/rentals',
+        element: <RentalList />,
+      },
+      {
+        path: '/admin/dashboard/rentals/register',
+        element: <RentalRegister />,
+      },
+      // ------ Invoices -----------//
+      {
+        path: '/admin/dashboard/rentals/:rental_id/invoices',
+        element: <InvoiceList />,
+      },
+      {
+        path: '/admin/dashboard/rentals/:rental_id/invoices/register',
+        element: <InvoiceRegister />,
+      },
+      {
+        path: '/admin/dashboard/rentals/:rental_id/invoices/:invoice_id/update',
+        element: <InvoiceUpdate />,
       },
     ],
   },

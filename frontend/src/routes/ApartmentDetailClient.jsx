@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-// src/components/ApartmentDetailClient.js
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   Container,
@@ -19,16 +18,35 @@ import {
   CircularProgress,
   Box,
   Divider,
+  TextField,
 } from '@mui/material'
 import useApartments from '../hooks/useApartments'
+import useBookings from '../hooks/useBooking'
+import { getTodayDateString } from '../utils/generalUtils'
+import { getItem } from '../utils/localStorageUtils'
+import useNotification from '../hooks/useNotificaiton'
+
+const initialFormData = {
+  available_room_type: {},
+  user: {},
+  status: {
+    booking_status_id: 1,
+    booking_status_name: 'Pending',
+  },
+  booking_date: null,
+  booking_comment: '',
+}
 
 function ApartmentDetailClient() {
   const { id } = useParams()
   const [apartment, setApartment] = useState(null)
   const [selectedRoomType, setSelectedRoomType] = useState('')
+  const [formData, setFormData] = useState(initialFormData)
   const navigate = useNavigate()
   const { getApartment } = useApartments()
+  const { loading, error, create } = useBookings()
 
+  const noti = useNotification()
   useEffect(() => {
     const fetchApartment = async () => {
       const apt = await getApartment(id)
@@ -41,9 +59,22 @@ function ApartmentDetailClient() {
     setSelectedRoomType(event.target.value)
   }
 
-  const handleBookApartment = () => {
-    if (selectedRoomType) {
-      navigate(`/booking/${id}?roomType=${selectedRoomType}`)
+  const handleCommentChange = event => {
+    setFormData({ ...formData, booking_comment: event.target.value })
+  }
+
+  const handleBookApartment = async () => {
+    try {
+      const todayDate = getTodayDateString()
+      const user = JSON.parse(getItem('user'))
+      const newFormData = { ...formData }
+      newFormData.available_room_type = selectedRoomType
+      newFormData.booking_date = todayDate
+      newFormData.user = user
+      const result = await create(newFormData)
+    } catch (err) {
+      console.error(err)
+      noti('error', 'Apartment Booking Failed. Please try again later.')
     }
   }
 
@@ -128,16 +159,24 @@ function ApartmentDetailClient() {
               label='Select Room Type To Book'
             >
               {apartment.available_room_types.map(room => (
-                <MenuItem
-                  key={room.available_room_type_id}
-                  value={room.available_room_type_id}
-                >
+                <MenuItem key={room.available_room_type_id} value={room}>
                   {room.room_type.room_type_name} - $
                   {room.available_room_type_price.toLocaleString()}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
+
+          <TextField
+            label='Booking Comment'
+            multiline
+            rows={4}
+            variant='outlined'
+            fullWidth
+            sx={{ mt: 2 }}
+            value={formData.booking_comment}
+            onChange={handleCommentChange}
+          />
 
           <Button
             variant='contained'

@@ -8,7 +8,7 @@ import Loading from '../../../../components/Loading'
 function ApartmentRegister() {
   const initialData = {
     apartment_name: '',
-    apartent_address: '',
+    apartment_address: '',
     apartment_desc: '',
     apartment_date_built: '',
     apartment_postal_code: '',

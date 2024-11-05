@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { Button, Card, CardContent, Typography } from '@mui/material'
 import useApartments from '../../../../hooks/useApartments'
-import Button from '../../../../components/Button'
 
 const initialData = {
   apartment_id: '',
@@ -43,17 +43,17 @@ function ApartmentDetail() {
   }
 
   return (
-    <div className='min-h-screen flex justify-center items-start bg-gray-100 py-10'>
-      <div className='bg-white p-8 w-full max-w-3xl rounded-lg shadow-lg'>
+    <div className='min-h-screen h-screen flex justify-center items-start bg-gray-100 py-10'>
+      <Card className='w-full '>
         {/* Back Button */}
-        <div className='mb-6'>
-          <Button onClick={handleBack} variant='secondary'>
+        <div className='p-4'>
+          <Button variant='outlined' onClick={handleBack}>
             Back to Apartments
           </Button>
         </div>
 
         {/* Apartment Image */}
-        <div className='border rounded-md shadow-sm overflow-hidden mb-6'>
+        <div className='border rounded-md shadow-sm overflow-hidden'>
           <img
             src={`${import.meta.env.VITE_BASE_URL}/${apartment.apartment_image}`}
             alt={apartment.apartment_name}
@@ -62,29 +62,37 @@ function ApartmentDetail() {
         </div>
 
         {/* Apartment Details */}
-        <h1 className='text-2xl font-bold mb-4'>{apartment.apartment_name}</h1>
-        <p className='mb-2 text-gray-700'>
-          <strong>Address:</strong> {apartment.apartment_address}
-        </p>
-        <p className='mb-2 text-gray-700'>
-          <strong>Description:</strong> {apartment.apartment_desc}
-        </p>
-        <p className='mb-2 text-gray-700'>
-          <strong>Date Built:</strong> {apartment.apartment_date_built}
-        </p>
-        <p className='mb-2 text-gray-700'>
-          <strong>Postal Code:</strong> {apartment.apartment_postal_code}
-        </p>
-        <p className='mb-2 text-gray-700'>
-          <strong>Capacity:</strong> {apartment.apartment_capacity} people
-        </p>
+        <CardContent>
+          <Typography variant='h5' component='h1' className='mb-2'>
+            {apartment.apartment_name}
+          </Typography>
+          <Typography variant='body1' className='mb-1'>
+            <strong>Address:</strong> {apartment.apartment_address}
+          </Typography>
+          <Typography variant='body1' className='mb-1'>
+            <strong>Description:</strong> {apartment.apartment_desc}
+          </Typography>
+          <Typography variant='body1' className='mb-1'>
+            <strong>Date Built:</strong> {apartment.apartment_date_built}
+          </Typography>
+          <Typography variant='body1' className='mb-1'>
+            <strong>Postal Code:</strong> {apartment.apartment_postal_code}
+          </Typography>
+          <Typography variant='body1' className='mb-1'>
+            <strong>Capacity:</strong> {apartment.apartment_capacity} people
+          </Typography>
+        </CardContent>
 
         {/* Action Buttons */}
-        <div className='flex space-x-4 mt-8'>
-          <Button onClick={handleManageRoomTypes}>Manage Room Types</Button>
-          <Button onClick={handleManageRooms}>Manage Rooms</Button>
+        <div className='p-4 flex space-x-4'>
+          <Button variant='contained' onClick={handleManageRoomTypes}>
+            Manage Room Types
+          </Button>
+          <Button variant='contained' onClick={handleManageRooms}>
+            Manage Rooms
+          </Button>
         </div>
-      </div>
+      </Card>
     </div>
   )
 }

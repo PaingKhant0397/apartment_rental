@@ -44,6 +44,7 @@ function Header() {
   const menuItems = [
     { text: 'Home', path: '/' },
     { text: 'Apartments', path: '/apartments' },
+    { text: 'Bookings', path: '/bookings' },
     { text: 'About Us', path: '/aboutus' },
     { text: 'Contact', path: '/contact' },
   ]

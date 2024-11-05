@@ -36,11 +36,18 @@ function ApartmentCatalog() {
         call home.
       </Typography>
       <Grid container spacing={4} sx={{ marginTop: '2rem' }}>
-        {apartments.map(apartment => (
-          <Grid item xs={12} sm={6} md={4} key={apartment.apartment_id}>
-            <ApartmentCard apartment={apartment} />
-          </Grid>
-        ))}
+        {apartments.map(apartment => {
+          if (
+            apartment.available_room_types &&
+            apartment.available_room_types.length !== 0
+          ) {
+            return (
+              <Grid item xs={12} sm={6} md={4} key={apartment.apartment_id}>
+                <ApartmentCard apartment={apartment} />
+              </Grid>
+            )
+          }
+        })}
       </Grid>
     </Box>
   )

@@ -13,18 +13,20 @@ const useApartments = () => {
   const [totalCount, setTotalCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [limit, setLimit] = useState(5)
+  const [currentPage, setCurrentPage] = useState(1)
   const notify = useNotification()
 
-  const getAllApartments = async () => {
+  const getAllApartments = async (page = 1) => {
     setLoading(true)
     try {
-      const data = await fetchApartments()
+      const offset = (page - 1) * limit
+      const data = await fetchApartments(limit, offset)
       setApartments(data.data)
-      setTotalCount(data.totalCount)
-      // notify('success', 'Apartments fetched successfully')
+      setTotalCount(data.total_count)
+      setCurrentPage(page)
     } catch (err) {
       setError(err)
-      console.error(err)
       notify('error', 'Failed to load apartments')
     } finally {
       setLoading(false)
@@ -93,9 +95,13 @@ const useApartments = () => {
 
   return {
     apartments,
+    totalCount,
     loading,
     error,
+    limit,
+    currentPage,
     getAllApartments,
+    setCurrentPage,
     addApartment,
     editApartment,
     removeApartment,

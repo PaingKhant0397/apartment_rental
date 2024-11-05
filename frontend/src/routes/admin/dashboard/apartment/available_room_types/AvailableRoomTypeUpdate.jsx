@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import AvailableRoomTypeForm from '../../../../../components/available_room_types/AvailableRoomTypeForm'
 import useAvailableRoomTypes from '../../../../../hooks/useAvailableRoomTypes'
@@ -34,7 +34,13 @@ function AvailableRoomTypeUpdate() {
 
     getArt()
   }, [])
-  console.log(availableRoomType)
+
+  const navigate = useNavigate()
+
+  const handleBack = () => {
+    navigate(`/admin/dashboard/apartments/${id}/available_room_types`)
+  }
+
   const handleSubmit = formData => {
     edit(formData.available_room_type_id, formData)
   }
@@ -46,6 +52,7 @@ function AvailableRoomTypeUpdate() {
         onSubmit={handleSubmit}
         initialData={availableRoomType}
         reset={false}
+        handleBack={handleBack}
       />
     </div>
   )

@@ -1,44 +1,42 @@
-/* eslint-disable react/no-array-index-key */
-
+import { Drawer, List, ListItem, ListItemText, IconButton } from '@mui/material'
 import { NavLink } from 'react-router-dom'
+import MenuIcon from '@mui/icons-material/Menu'
+import CloseIcon from '@mui/icons-material/Close'
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, toggleSidebar }) {
   const navLinkList = [
-    {
-      name: 'Home',
-      to: '/admin/dashboard',
-    },
-    {
-      name: 'Apartment Register',
-      to: '/admin/dashboard/apartments/register',
-    },
-    {
-      name: 'Apartment List',
-      to: '/admin/dashboard/apartments/',
-    },
+    { name: 'Home', to: '/admin/dashboard' },
+    { name: 'Apartment Register', to: '/admin/dashboard/apartments/register' },
+    { name: 'Apartment List', to: '/admin/dashboard/apartments/' },
+    { name: 'Booking List', to: '/admin/dashboard/bookings' },
+    { name: 'Rental List', to: '/admin/dashboard/rentals' },
   ]
+
   return (
-    <aside className='w-64 min-h-screen bg-gray-800 text-white'>
-      <div className='p-4'>
-        <h1 className='text-2xl font-bold'>Admin Dashboard</h1>
-      </div>
-      <nav className='mt-8 px-2'>
-        <ul>
+    <Drawer
+      anchor='left'
+      open={isOpen}
+      onClose={toggleSidebar}
+      variant='temporary' // Use 'temporary' for mobile responsiveness
+    >
+      <div style={{ width: 250 }}>
+        <IconButton onClick={toggleSidebar}>
+          <CloseIcon />
+        </IconButton>
+        <List>
           {navLinkList.map((navLink, index) => (
-            <li className='mb-4' key={index}>
-              <NavLink
-                to={navLink.to}
-                className={({ isActive }) =>
-                  `block px-4 py-2 hover:bg-gray-700 rounded ${isActive ? 'bg-gray-700' : ''}`
-                }
-                end
-              >
-                {navLink.name}
-              </NavLink>
-            </li>
+            <ListItem
+              button
+              component={NavLink}
+              to={navLink.to}
+              key={index}
+              onClick={toggleSidebar}
+            >
+              <ListItemText primary={navLink.name} />
+            </ListItem>
           ))}
-        </ul>
-      </nav>
-    </aside>
+        </List>
+      </div>
+    </Drawer>
   )
 }

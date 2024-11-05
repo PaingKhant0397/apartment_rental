@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import AvailableRoomTypeForm from '../../../../../components/available_room_types/AvailableRoomTypeForm'
 import useAvailableRoomTypes from '../../../../../hooks/useAvailableRoomTypes'
 import useRoomTypes from '../../../../../hooks/useRoomTypes'
@@ -16,16 +16,23 @@ function AvailableRoomTypeRegister() {
     available_room_type_deposit_amount: '',
   }
 
+  const navigate = useNavigate()
+
+  const handleBack = () => {
+    navigate(`/admin/dashboard/apartments/${id}/available_room_types`)
+  }
+
   const { add } = useAvailableRoomTypes()
   const { roomTypes } = useRoomTypes()
 
   return (
-    <div className='min-h-screen flex justify-center items-top bg-gray-100'>
+    <div className='min-h-fit flex justify-center items-top bg-gray-100'>
       <AvailableRoomTypeForm
         roomTypes={roomTypes}
         onSubmit={add}
         initialData={initialData}
         reset
+        handleBack={handleBack}
       />
     </div>
   )

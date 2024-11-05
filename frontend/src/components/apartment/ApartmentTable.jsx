@@ -1,72 +1,115 @@
-import Button from '../Button'
+import React from 'react'
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Button,
+  Pagination,
+  Paper,
+} from '@mui/material'
 
-function ApartmentTable({ apartments, onEdit, onDelete, onView }) {
-  // console.log(apartments)
-  if (apartments.length === 0) {
-    return <p>No apartments available.</p>
+function ApartmentTable({
+  apartments,
+  onEdit,
+  onDelete,
+  onView,
+  totalCount,
+  currentPage,
+  setCurrentPage,
+  limit,
+}) {
+  const totalPages = Math.ceil(totalCount / limit)
+
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage)
   }
 
   return (
-    <table className='bg-white p-8 rounded-lg shadow-md w-full h-fit overflow-hidden'>
-      <thead>
-        <tr className='bg-gray-300'>
-          <th className='py-2 px-4 border-b'>Name</th>
-          <th className='py-2 px-4 border-b'>Address</th>
-          <th className='py-2 px-4 border-b'>Date Built</th>
-          <th className='py-2 px-4 border-b'>Postal Code</th>
-          <th className='py-2 px-4 border-b'>Capacity</th>
-          <th className='py-2 px-4 border-b'>Image</th>
-          <th className='py-2 px-4 border-b'>View</th>
-          <th className='py-2 px-4 border-b'>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {apartments.map(apartment => (
-          <tr key={apartment.apartment_id} className='text-center'>
-            <td className='py-2 px-4 border-b'>{apartment.apartment_name}</td>
-            <td className='py-2 px-4 border-b'>
-              {apartment.apartment_address}
-            </td>
-            <td className='py-2 px-4 border-b'>
-              {apartment.apartment_date_built}
-            </td>
-            <td className='py-2 px-4 border-b'>
-              {apartment.apartment_postal_code}
-            </td>
-            <td className='py-2 px-4 border-b'>
-              {apartment.apartment_capacity}
-            </td>
-            <td className='py-2 px-4 border-b'>
-              <img
-                src={`${import.meta.env.VITE_BASE_URL}/${apartment.apartment_image}`}
-                alt='an apartment'
-                className='w-16 h-16 object-cover'
-              />
-            </td>
-            <td className='py-2 px-4 border-b'>
-              <Button
-                variant='primary'
-                onClick={() => onView(apartment.apartment_id)}
-              >
-                View
-              </Button>
-            </td>
-
-            <td className='py-2 px-4 border-b space-x-2'>
-              <Button variant='secondary' onClick={() => onEdit(apartment)}>
-                Edit
-              </Button>
-              <Button
-                variant='danger'
-                onClick={() => onDelete(apartment.apartment_id)}
-              >
-                Delete
-              </Button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <Paper elevation={3} className='p-4 w-full'>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell align='center'>Name</TableCell>
+            <TableCell align='center'>Address</TableCell>
+            <TableCell align='center'>Date Built</TableCell>
+            <TableCell align='center'>Postal Code</TableCell>
+            <TableCell align='center'>Capacity</TableCell>
+            <TableCell align='center'>Image</TableCell>
+            <TableCell align='center'>View</TableCell>
+            <TableCell align='center'>Actions</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {apartments.map(apartment => (
+            <TableRow key={apartment.apartment_id} hover>
+              <TableCell align='center'>{apartment.apartment_name}</TableCell>
+              <TableCell align='center'>
+                {apartment.apartment_address}
+              </TableCell>
+              <TableCell align='center'>
+                {apartment.apartment_date_built}
+              </TableCell>
+              <TableCell align='center'>
+                {apartment.apartment_postal_code}
+              </TableCell>
+              <TableCell align='center'>
+                {apartment.apartment_capacity}
+              </TableCell>
+              <TableCell align='center'>
+                <img
+                  src={`${import.meta.env.VITE_BASE_URL}/${apartment.apartment_image}`}
+                  alt='Apartment'
+                  style={{
+                    width: 64,
+                    height: 64,
+                    objectFit: 'cover',
+                    borderRadius: 4,
+                  }}
+                />
+              </TableCell>
+              <TableCell align='center'>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={() => onView(apartment.apartment_id)}
+                >
+                  View
+                </Button>
+              </TableCell>
+              <TableCell align='center'>
+                <Button
+                  variant='outlined'
+                  color='primary'
+                  onClick={() => onEdit(apartment)}
+                  style={{ marginRight: 8 }}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant='outlined'
+                  color='error'
+                  onClick={() => onDelete(apartment.apartment_id)}
+                >
+                  Delete
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      {/* Pagination Controls */}
+      <div className='flex justify-center mt-4'>
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color='primary'
+          shape='rounded'
+        />
+      </div>
+    </Paper>
   )
 }
 

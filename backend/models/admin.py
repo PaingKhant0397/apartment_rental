@@ -1,49 +1,82 @@
 from __future__ import annotations
 from typing import List, TYPE_CHECKING
-
+from utils import setup_logger
 if TYPE_CHECKING:
     from database import Database
+logger = setup_logger(__name__)
 
 
-class Admin():
+class Admin:
 
-    def __init__(self, adminID: int = None,  adminName: str = None, adminEmail: str = None, adminPassword: str = None):
+    def __init__(self, admin_id: int = None, admin_username: str = None,  admin_password: str = None, role: str = 'admin'):
+        self.__admin_id = admin_id
+        self.__admin_username = admin_username
+        self.__admin_password = admin_password
+        self.__role = role
 
-        self.__adminID = adminID
+    def to_dict(self) -> dict:
+        return {
+            'admin_id': self.__admin_id,
+            'role': self.__role,
+            'admin_username': self.__admin_username
+        }
 
-        self.__adminName = adminName
-        self.__adminEmail = adminEmail
-        self.__adminPassword = adminPassword
+    def get_admin_role(self) -> str:
+        return self.__role
 
-    def save(self, db: Database) -> 'Admin':
-        pass
-        # query = "INSERT INTO Admin_table (AdminRoleID, adminName, adminEmail, adminPassword) VALUES (%s, %s, %s, %s) RETURNING adminID,AdminRoleID,adminName,adminEmail"
-        # values = (self.AdminRoleID, self.adminName,
-        #           self.adminEmail, self.adminPassword,)
-        # return self.insert(query, values)
+    def get_admin_id(self) -> int:
+        return self.__admin_id
 
-    @staticmethod
-    def get(db: Database, AdminID: int) -> 'Admin':
-        pass
+    def get_admin_username(self) -> str:
+        return self.__admin_username
 
-    @staticmethod
-    def delete(db: Database, AdminID: int) -> None:
-        pass
+    def get_admin_password(self) -> str:
+        return self.__admin_password
 
-    @staticmethod
-    def all(db: Database,) -> List['Admin']:
-        pass
-        # query = """
-        #             SELECT
-        #                 u.AdminID,
-        #                 u.adminName,
-        #                 u.adminEmail,
-        #                 ur.AdminRoleName
-        #             FROM
-        #                 Admin_table u
-        #             JOIN
-        #                 Admin_role ur
-        #             ON
-        #                 u.AdminRoleID = ur.AdminRoleID;
-        #         """
-        # return self.fetch_all(query)
+    def set_admin_password(self, admin_password: str) -> None:
+        self.__admin_password = admin_password
+
+    @classmethod
+    def get_by_username(cls, db: Database, admin_username: str):
+        try:
+            query = """SELECT 
+                            admin_id,
+                            admin_username,
+                            admin_password 
+                        FROM 
+                            admin_table 
+                        WHERE 
+                            admin_username=%s"""
+            values = (admin_username,)
+            result = db.fetch_one(query, values)
+            if result:
+                return cls(
+                    admin_id=result['admin_id'],
+                    admin_username=result['admin_username'],
+                    admin_password=result['admin_password'],
+                )
+
+        except Exception as e:
+            raise Exception(f"Error getting user by username: {e}")
+
+    def insert(self, db: Database) -> 'Admin':
+        try:
+            query = """
+                INSERT INTO admin_table (admin_username, admin_password)
+                VALUES (%s, %s)
+                RETURNING admin_id, admin_username;
+            """
+            values = (self.__admin_username, self.__admin_password)
+            result = db.insert(query, values)
+
+            if result:
+                return Admin(
+                    admin_id=result['admin_id'],
+                    admin_username=result['admin_username'],
+                )
+            else:
+                logger.warning("Admin insertion failed: No result returned")
+                return None
+        except Exception as e:
+            logger.error(f"Error during admin registration: {e}")
+            raise Exception(f"Error during admin registration: {e}")

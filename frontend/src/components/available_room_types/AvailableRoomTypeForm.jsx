@@ -1,8 +1,20 @@
 import { useState, useEffect } from 'react'
-import InputField from '../InputField'
-import Button from '../Button'
+import {
+  TextField,
+  Button,
+  MenuItem,
+  Typography,
+  Box,
+  Paper,
+} from '@mui/material'
 
-function AvailableRoomTypeForm({ roomTypes, onSubmit, initialData, reset }) {
+function AvailableRoomTypeForm({
+  roomTypes,
+  onSubmit,
+  initialData,
+  reset,
+  handleBack,
+}) {
   const [formData, setFormData] = useState(initialData)
 
   useEffect(() => {
@@ -18,7 +30,6 @@ function AvailableRoomTypeForm({ roomTypes, onSubmit, initialData, reset }) {
       const selectedRoomType = roomTypes.find(
         roomType => Number(roomType.room_type_id) === Number(value),
       )
-      // console.log('selected', selectedRoomType)
       setFormData(prevData => ({
         ...prevData,
         room_type: {
@@ -30,12 +41,10 @@ function AvailableRoomTypeForm({ roomTypes, onSubmit, initialData, reset }) {
     } else {
       setFormData({ ...formData, [name]: value })
     }
-    // console.log(formData)
   }
 
   const handleSubmit = e => {
     e.preventDefault()
-    // console.log(formData)
     onSubmit(formData)
     if (reset) {
       setFormData(initialData)
@@ -43,45 +52,74 @@ function AvailableRoomTypeForm({ roomTypes, onSubmit, initialData, reset }) {
   }
 
   return (
-    <div className='bg-white p-8 rounded-lg shadow-md w-full'>
-      <h1 className='text-2xl font-bold mb-5'>Add Available Room Type</h1>
-      <form action=''>
-        <InputField
-          id='available_room_type_price'
-          label='Price'
-          type='number'
-          value={formData.available_room_type_price}
-          onChange={handleChange}
-          required
-        />
+    <Paper elevation={3} className='w-full p-6'>
+      <Typography variant='h5' component='h1' gutterBottom>
+        {formData.available_room_type_id
+          ? 'Edit Available Room Type'
+          : 'Add Available Room Type'}
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <Box mb={3}>
+          <TextField
+            id='available_room_type_price'
+            label='Price'
+            type='number'
+            variant='outlined'
+            fullWidth
+            name='available_room_type_price'
+            value={formData.available_room_type_price || ''}
+            onChange={handleChange}
+            required
+          />
+        </Box>
 
-        <InputField
-          id='available_room_type_deposit_amount'
-          label='Deposit Amount'
-          type='number'
-          value={formData.available_room_type_deposit_amount}
-          onChange={handleChange}
-          required
-        />
+        <Box mb={3}>
+          <TextField
+            id='available_room_type_deposit_amount'
+            label='Deposit Amount'
+            type='number'
+            variant='outlined'
+            fullWidth
+            name='available_room_type_deposit_amount'
+            value={formData.available_room_type_deposit_amount || ''}
+            onChange={handleChange}
+            required
+          />
+        </Box>
 
-        <InputField
-          id='room_type'
-          label='Room Type'
-          type='select'
-          value={formData.room_type.room_type_id}
-          onChange={handleChange}
-          required
-          options={roomTypes.map(roomType => ({
-            value: roomType.room_type_id,
-            label: roomType.room_type_name,
-          }))}
-        />
+        <Box mb={3}>
+          <TextField
+            id='room_type'
+            label='Room Type'
+            select
+            fullWidth
+            variant='outlined'
+            name='room_type'
+            value={formData.room_type.room_type_id || ''}
+            onChange={handleChange}
+            required
+          >
+            {roomTypes.map(roomType => (
+              <MenuItem
+                key={roomType.room_type_id}
+                value={roomType.room_type_id}
+              >
+                {roomType.room_type_name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
 
-        <Button onClick={handleSubmit}>
-          {formData.available_room_type_id ? 'Update' : 'Submit'}
-        </Button>
+        <Box display='flex' gap={2}>
+          <Button type='submit' variant='contained' color='primary'>
+            {formData.available_room_type_id ? 'Update' : 'Submit'}
+          </Button>
+          <Button onClick={handleBack} variant='outlined' color='secondary'>
+            Go Back
+          </Button>
+        </Box>
       </form>
-    </div>
+    </Paper>
   )
 }
 

@@ -18,15 +18,32 @@ class ErrorHandler:
                     f"Unhandled exception in {func.__name__}: {str(e)}")
                 if isinstance(e, ValueError):
                     handler.send_response(400)
+
+                    handler.send_header('Access-Control-Allow-Origin', '*')
+                    handler.send_header('Access-Control-Allow-Methods',
+                                        'POST')
+                    handler.send_header('Access-Control-Allow-Headers',
+                                        'Content-Type, Authorization')
+
+                    handler.send_header(
+                        'Access-Control-Allow-Credentials', 'true')
                     handler.send_header('Content-Type', 'application/json')
                     handler.end_headers()
                     response = {
                         'status': 'error',
                         'message': str(e)
                     }
-                    handler.wfile.write(json.damps(response).encode())
+                    handler.wfile.write(json.dumps(response).encode())
                 else:
                     handler.send_response(500)
+                    handler.send_header('Access-Control-Allow-Origin', '*')
+                    handler.send_header('Access-Control-Allow-Methods',
+                                        'POST')
+                    handler.send_header('Access-Control-Allow-Headers',
+                                        'Content-Type, Authorization')
+
+                    handler.send_header(
+                        'Access-Control-Allow-Credentials', 'true')
                     handler.send_header('Content-type', 'application/json')
                     handler.end_headers()
                     response = {

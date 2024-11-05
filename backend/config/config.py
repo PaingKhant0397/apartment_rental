@@ -30,3 +30,5 @@ TEST_CONNECTION_PARAMS = {
 """JWT SECRET KEY 
     """
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+
+SMTP_PW = os.getenv('SMTP_PW')

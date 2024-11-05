@@ -4,11 +4,12 @@ import datetime
 from config import JWT_SECRET_KEY
 
 
-def generate_jwt_token(id, name):
+def generate_jwt_token(id, name, role):
     try:
         payload = {
             "id": id,
             "name": name,
+            "role": role,
             "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=30)
         }
 

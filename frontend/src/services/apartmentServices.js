@@ -3,7 +3,7 @@ import { getItem } from '../utils/localStorageUtils'
 
 const BASE_URL = import.meta.env.VITE_API_URL
 
-const fetchApartments = async (limit, offset) => {
+const fetchApartments = async (limit = 10, offset = 0) => {
   try {
     const response = await axios.get(`${BASE_URL}/apartments`, {
       params: { limit, offset },

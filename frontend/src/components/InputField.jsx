@@ -1,4 +1,13 @@
-/* eslint-disable react/no-array-index-key */
+import React from 'react'
+import {
+  TextField,
+  MenuItem,
+  InputLabel,
+  Select,
+  FormControl,
+  FormHelperText,
+} from '@mui/material'
+
 function InputField({
   id,
   label,
@@ -13,78 +22,98 @@ function InputField({
 
   if (type === 'textarea') {
     inputElement = (
-      <textarea
+      <TextField
         id={id}
         name={id}
+        label={label}
         value={value}
         onChange={onChange}
-        className={`mt-1 block w-full px-3 py-2 border ${
-          error ? 'border-red-500' : 'border-gray-300'
-        } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
-        required={required}
+        variant='outlined'
+        fullWidth
+        multiline
         rows={5}
+        required={required}
+        error={!!error}
+        helperText={error}
+        InputLabelProps={{
+          shrink: true, // Ensure the label stays above the textarea
+        }}
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: error ? 'red' : 'gray', // Customize border color on error
+            },
+          },
+        }}
       />
     )
   } else if (type === 'file') {
     inputElement = (
-      <input
+      <TextField
         type='file'
         id={id}
         name={id}
         onChange={onChange}
-        className={`mt-1 block w-full px-3 py-2 border ${
-          error ? 'border-red-500' : 'border-gray-300'
-        } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+        variant='outlined'
+        fullWidth
         required={required}
+        error={!!error}
+        helperText={error}
+        InputLabelProps={{
+          shrink: true,
+        }}
       />
     )
   } else if (type === 'select') {
     inputElement = (
-      <select
-        id={id}
-        name={id}
-        value={value}
-        onChange={onChange}
-        className={`mt-1 block w-full px-3 py-2 border ${
-          error ? 'border-red-500' : 'border-gray-300'
-        } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+      <FormControl
+        fullWidth
+        variant='outlined'
         required={required}
+        error={!!error}
       >
-        <option value='' disabled>
-          Select an option
-        </option>
-        {options.map((option, index) => (
-          <option key={index} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+        <InputLabel id={`${id}-label`}>{label}</InputLabel>
+        <Select
+          labelId={`${id}-label`}
+          id={id}
+          name={id}
+          value={value}
+          onChange={onChange}
+          label={label}
+        >
+          <MenuItem value='' disabled>
+            Select an option
+          </MenuItem>
+          {options.map((option, index) => (
+            <MenuItem key={index} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+        {error && <FormHelperText>{error}</FormHelperText>}
+      </FormControl>
     )
   } else {
     inputElement = (
-      <input
+      <TextField
         type={type}
         id={id}
         name={id}
+        label={label}
         value={value}
         onChange={onChange}
-        className={`mt-1 block w-full px-3 py-2 border ${
-          error ? 'border-red-500' : 'border-gray-300'
-        } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+        variant='outlined'
+        fullWidth
         required={required}
+        error={!!error}
+        helperText={error}
+        InputLabelProps={type === 'date' ? { shrink: true } : {}}
+        placeholder={type === 'date' ? 'dd/mm/yyyy' : ''}
       />
     )
   }
 
-  return (
-    <div className='mb-4'>
-      <label htmlFor={id} className='block text-sm font-medium text-gray-700'>
-        {label}
-      </label>
-      {inputElement}
-      {error && <p className='text-red-500 text-sm'>{error}</p>}
-    </div>
-  )
+  return <div style={{ marginBottom: '1rem' }}>{inputElement}</div>
 }
 
 export default InputField

@@ -70,6 +70,25 @@ class Database:
         except psycopg2.DatabaseError as e:
             raise Exception(f"Database error during insert: {e}")
 
+    def update(self, query, params=None):
+
+        try:
+            with self.connect() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute(query, params)
+                    conn.commit()
+                    row = cursor.fetchone()
+                    if row is None:
+                        return None
+                    colnames = [desc[0] for desc in cursor.description]
+                    return dict(zip(colnames, row))
+
+        except psycopg2.IntegrityError as e:
+            raise Exception(f"Integrity error during insert: {e}")
+
+        except psycopg2.DatabaseError as e:
+            raise Exception(f"Database error during insert: {e}")
+
     def fetch_all(self, query, params=None):
         """Fetch all results from a SELECT query."""
         try:

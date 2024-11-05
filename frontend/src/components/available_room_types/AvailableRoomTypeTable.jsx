@@ -1,81 +1,73 @@
-import Button from '../Button'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Box,
+} from '@mui/material'
 
 function AvailableRoomTypeTable({ data, onEdit, onDelete, onAdd }) {
-  if (data?.length === 0) {
-    return <p>No Room Types available.</p>
-  }
-
   return (
-    <div className='w-full min-h-screen'>
-      <div className='flex justify-start mb-6'>
-        <Button variant='primary' onClick={() => onAdd()}>
+    <Box width='100%' minHeight='100vh'>
+      <Box display='flex' justifyContent='flex-start' mb={3}>
+        <Button variant='contained' color='primary' onClick={onAdd}>
           Add Available Room Type
         </Button>
-      </div>
-      <table className='bg-white p-8 rounded-lg shadow-md w-full h-fit overflow-hidden'>
-        <thead>
-          <tr className='bg-gray-300'>
-            <th className='py-2 px-4 border-b'>Room Type</th>
-            <th className='py-2 px-4 border-b'>Price</th>
-            <th className='py-2 px-4 border-b'>Deposit</th>
-            {/* <th className='py-2 px-4 border-b'>View</th> */}
-            <th className='py-2 px-4 border-b'>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.map(availableRoomType => (
-            <tr
-              key={availableRoomType.available_room_type_id}
-              className='text-center'
-            >
-              <td className='py-2 px-4 border-b'>
-                {availableRoomType.room_type.room_type_name}
-              </td>
-              <td className='py-2 px-4 border-b'>
-                {availableRoomType.available_room_type_price}
-              </td>
-              <td className='py-2 px-4 border-b'>
-                {availableRoomType.available_room_type_deposit_amount}
-              </td>
-
-              {/* <td className='py-2 px-4 border-b'>
-              <Button
-                variant='primary'
-                onClick={() =>
-                  onView(
-                    availableRoomType.apartment_id,
-                    availableRoomType.available_room_type_id,
-                  )
-                }
-              >
-                View
-              </Button>
-            </td> */}
-
-              <td className='py-2 px-4 border-b space-x-2'>
-                <Button
-                  variant='secondary'
-                  onClick={() => onEdit(availableRoomType)}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant='danger'
-                  onClick={() =>
-                    onDelete(
-                      availableRoomType.apartment_id,
-                      availableRoomType.available_room_type_id,
-                    )
-                  }
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      </Box>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Room Type</TableCell>
+              <TableCell>Price</TableCell>
+              <TableCell>Deposit</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data?.map(availableRoomType => (
+              <TableRow key={availableRoomType.available_room_type_id}>
+                <TableCell>
+                  {availableRoomType.room_type.room_type_name}
+                </TableCell>
+                <TableCell>
+                  {availableRoomType.available_room_type_price}
+                </TableCell>
+                <TableCell>
+                  {availableRoomType.available_room_type_deposit_amount}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant='outlined'
+                    color='primary'
+                    onClick={() => onEdit(availableRoomType)}
+                    sx={{ mr: 1 }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant='outlined'
+                    color='error'
+                    onClick={() =>
+                      onDelete(
+                        availableRoomType.apartment_id,
+                        availableRoomType.available_room_type_id,
+                      )
+                    }
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   )
 }
 

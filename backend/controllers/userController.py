@@ -1,8 +1,9 @@
 from http.server import BaseHTTPRequestHandler
 from models import User
 from utils import handle_unknown_endpoint, send_json_response, get_request_data
-# from middlewares import RequestValidation
+from config import CONNECTION_PARAMS
 from middlewares import JWTAuthentication, RequestValidation
+from database import Database
 
 
 class UserController(BaseHTTPRequestHandler):
@@ -12,12 +13,12 @@ class UserController(BaseHTTPRequestHandler):
         ('/api/users', 'PUT'): ['userID', 'userRoleID', 'userName', 'userEmail', 'userPassword'],
     }
 
-    @JWTAuthentication.require_jwt
+    @JWTAuthentication.require_jwt("admin")
     def do_GET(self):
-        user = User()
+        db = Database(CONNECTION_PARAMS)
         if self.path == '/api/users':
             try:
-                users = user.all()
+                users = User.all(db)
                 send_json_response(self, users, 200)
             except Exception as e:
                 raise Exception(f"Error fetching users: {e}")

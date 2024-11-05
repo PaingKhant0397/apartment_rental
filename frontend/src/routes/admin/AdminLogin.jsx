@@ -49,7 +49,7 @@ function AdminLogin() {
         admin_password: adminPassword,
       })
       setMessage('Login successful!')
-      navigate('/admin/dashboard/')
+      navigate('/admin/dashboard/apartments/')
       setAdminUsername('')
       setAdminPassword('')
     } catch (error) {
